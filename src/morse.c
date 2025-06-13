@@ -1,11 +1,40 @@
 
+
 /**
  * @file morse.c
- * @brief Implementierung der Funktionen zur Morse-Code-Kodierung und -Dekodierung.
- *
- * Dieses Modul enthält die konkrete Umsetzung der encode- und decode-Funktionen,
- * einschließlich einer internen Zuordnungstabelle zwischen Zeichen und Morsecode.
+ * @brief Enthält die Implementierung der Morse-Kodierung und die MorseMap-Struktur.
  */
+
+/**
+ * @page datenformate Verwendete Datenformate
+ *
+ * ## MorseMap
+ * Diese Struktur dient als Zuordnungstabelle zwischen Klartext-Zeichen und Morsecode.
+ * Sie wird verwendet in den Funktionen `encode()` und `decode()`, um Buchstaben und Ziffern
+ * als Morsezeichen darzustellen oder zurückzuwandeln.
+ *
+ * ```c
+ * typedef struct {
+ *   char character;
+ *   const char* morse;
+ * } MorseMap;
+ * ```
+ *
+ * - `character`: Zeichen, z. B. 'A', '5', '='
+ * - `morse`: Morsezeichenkette, z. B. ".-", ".....", "-...-"
+ */
+
+/**
+ * @struct MorseMap
+ * @brief Repräsentiert ein Zeichen und dessen zugehörige Morsecode-Zeichenkette.
+ *
+ * Wird intern als statisches Lookup-Array verwendet.
+ */
+typedef struct {
+    char character;      /**< Klartextzeichen (A-Z, 0-9, Symbole) */
+    const char *morse;   /**< Morsecode-Darstellung (z. B. ".-") */
+} MorseMap;
+
 
 #include "morse.h"
 #include <string.h>
@@ -15,10 +44,6 @@
 /**
  * @brief Interne Struktur zur Zuordnung von Zeichen zu Morsecode.
  */
-typedef struct {
-    char character;      /**< Klartextzeichen (A-Z, 0-9, Symbol) */
-    const char *morse;   /**< Entsprechender Morsecode */
-} MorseMap;
 
 /**
  * @brief Morsecode-Tabelle für unterstützte Zeichen.
@@ -94,7 +119,9 @@ char morse_to_char(const char *code) {
  * @param output FILE-Zielstream
  * @param use_slash_wordspacer true = Wörter mit „/“ trennen
  * @return 0 bei Erfolg
- */
+ * @brief Nutzt intern die Struktur \ref MorseMap zur Kodierung.
+*/
+
 int encode(const char *input, FILE *output, int use_slash_wordspacer) {
     int space_count = 0;
     for (size_t i = 0; input[i] != '\0'; ++i) {

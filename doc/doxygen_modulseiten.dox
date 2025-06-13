@@ -1,0 +1,34 @@
+
+/**
+ * @page modul_funktionen Alle Modul-Funktionen im Überblick
+ *
+ * Diese Seite dokumentiert alle zentralen Funktionen und Schnittstellen des Morse-Tools
+ * gemäß TI24-Vorgaben. Sie gruppiert die zuvor kommentierten Funktionen aus:
+ *
+ * - morse.h
+ * - morse.c
+ * - main.c
+ *
+ * ---
+ *
+ * @section morseh_header Schnittstellen (morse.h)
+ *
+ * - void print_help()
+ * - void print_programmer_info()
+ * - int encode(const char *input, FILE *output, int use_slash_wordspacer)
+ * - int decode(const char *input, FILE *output)
+ *
+ * @section morsec_impl Implementierungsfunktionen (morse.c)
+ *
+ * - const char* char_to_morse(char c)
+ * - char morse_to_char(const char *code)
+ * - encode(...)
+ * - decode(...)
+ *
+ * @section mainc_entry Hauptfunktion (main.c)
+ *
+ * - int main(int argc, char *argv[])
+ *
+ * Die Funktionen sind zusätzlich auch über die Quellcodedateien verlinkt
+ * und werden in der globalen Funktionsübersicht separat aufgeführt.
+ */

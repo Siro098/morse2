@@ -51,7 +51,7 @@ Unbekannte Zeichen werden durch `*` ersetzt.
 
 ---
 
-## ⚙ Build-Anleitung
+##  Build-Anleitung
 
 Zum Kompilieren wird `CMake` und ein C99-kompatibler Compiler benötigt (z. B. GCC oder MinGW64):
 
