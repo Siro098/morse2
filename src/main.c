@@ -1,7 +1,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <getopt.h>
 #include "morse.h"
 
@@ -52,7 +51,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (encode_flag && decode_flag) {
-        fprintf(stderr, "Fehler: --encode und --decode dürfen nicht gleichzeitig verwendet werden.\n");
+        fprintf(stderr, "Fehler: --encode und --decode duerfen nicht gleichzeitig verwendet werden.\n");
         return 1;
     }
 
