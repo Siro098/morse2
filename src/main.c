@@ -1,11 +1,39 @@
 
+/**
+ * @file main.c
+ * @brief Hauptprogramm für das Morse-Code-Tool (TI24)
+ *
+ * Dieses Programm analysiert Kommandozeilenargumente und leitet die Eingabe
+ * an die passenden Funktionen zur Morse-Kodierung oder -Dekodierung weiter.
+ * Unterstützt Datei- und Pipedaten sowie Umleitungen.
+ *
+ * @author Simon Liebl
+ * @date 2025
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <getopt.h>
 #include "morse.h"
 
 #define BUFFER_SIZE 8192
 
+/**
+ * @brief Einstiegspunkt des Programms. Verarbeitet Optionen und leitet Daten weiter.
+ *
+ * Unterstützte Optionen:
+ * - `-e`, `--encode`: Text in Morsecode umwandeln
+ * - `-d`, `--decode`: Morsecode in Text umwandeln
+ * - `-o`, `--out`: Ausgabe in Datei
+ * - `--slash-wordspacer`: Fügt `/` als Worttrenner ein (nur bei Encode)
+ * - `--programmer-info`: Gibt JSON mit Metadaten aus
+ * - `-h`, `--help`: Hilfe anzeigen
+ *
+ * @param argc Anzahl der Argumente
+ * @param argv Argumente als Zeichenketten
+ * @return 0 bei Erfolg, 1 bei Fehler
+ */
 int main(int argc, char *argv[]) {
     int opt;
     int encode_flag = 0;
@@ -51,7 +79,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (encode_flag && decode_flag) {
-        fprintf(stderr, "Fehler: --encode und --decode duerfen nicht gleichzeitig verwendet werden.\n");
+        fprintf(stderr, "Fehler: --encode und --decode dürfen nicht gleichzeitig verwendet werden.\n");
         return 1;
     }
 

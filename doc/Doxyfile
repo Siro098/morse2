@@ -54,8 +54,8 @@ PROJECT_NUMBER         = 2.0
 # for a project that appears at the top of each page and should give viewers a
 # quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          = "Dieses Programm ermöglicht die Umwandlung von Text in Morsecode und umgekehrt.
-                          Es wurde gemäß den Anforderungen des Programmentwurfs TI24 (Version 1.0) an der DHBW Ravensburg, Außenstelle Friedrichshafen, entwickelt."
+PROJECT_BRIEF          = "Dieses Programm ermöglicht die Umwandlung von Text in Morsecode und umgekehrt."
+
 
 # With the PROJECT_LOGO tag one can specify a logo or an icon that is included
 # in the documentation. The maximum height of the logo should not exceed 55

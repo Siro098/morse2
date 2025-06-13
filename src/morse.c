@@ -1,14 +1,28 @@
 
+/**
+ * @file morse.c
+ * @brief Implementierung der Funktionen zur Morse-Code-Kodierung und -Dekodierung.
+ *
+ * Dieses Modul enthält die konkrete Umsetzung der encode- und decode-Funktionen,
+ * einschließlich einer internen Zuordnungstabelle zwischen Zeichen und Morsecode.
+ */
+
 #include "morse.h"
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 
+/**
+ * @brief Interne Struktur zur Zuordnung von Zeichen zu Morsecode.
+ */
 typedef struct {
-    char character;
-    const char *morse;
+    char character;      /**< Klartextzeichen (A-Z, 0-9, Symbol) */
+    const char *morse;   /**< Entsprechender Morsecode */
 } MorseMap;
 
+/**
+ * @brief Morsecode-Tabelle für unterstützte Zeichen.
+ */
 static MorseMap morse_table[] = {
     {'A', ".-"}, {'B', "-..."}, {'C', "-.-."}, {'D', "-.."}, {'E', "."},
     {'F', "..-."}, {'G', "--."}, {'H', "...."}, {'I', ".."}, {'J', ".---"},
@@ -26,12 +40,11 @@ static MorseMap morse_table[] = {
 
 void print_help() {
     printf("Verwendung: morse [OPTIONEN] [DATEI]\n");
-    printf("Optionen:\n");
     printf("  -e, --encode               Text in Morsecode umwandeln\n");
-    printf("  -d, --decode               Morsecode in Klartext umwandeln\n");
-    printf("  -o, --out [DATEI]          Ausgabedatei\n");
-    printf("  --programmer-info          Autorinformation im JSON-Format\n");
-    printf("  --slash-wordspacer        Fügt / zwischen Wörter ein (nur mit Encode)\n");
+    printf("  -d, --decode               Morsecode in Text umwandeln\n");
+    printf("  -o, --out [DATEI]          Ausgabe in Datei\n");
+    printf("  --slash-wordspacer         Verwende / zwischen Wörtern (nur Encode)\n");
+    printf("  --programmer-info          Zeigt JSON-Block mit Autorinfo\n");
     printf("  -h, --help                 Hilfe anzeigen\n");
 }
 
@@ -44,6 +57,12 @@ void print_programmer_info() {
     printf("}\n");
 }
 
+/**
+ * @brief Sucht Morsecode für ein gegebenes Zeichen.
+ *
+ * @param c Der Eingabe-Buchstabe (Großbuchstabe erwartet).
+ * @return Morsecode-Zeichenkette oder "*" wenn nicht gefunden.
+ */
 const char* char_to_morse(char c) {
     for (size_t i = 0; i < TABLE_SIZE; ++i) {
         if (morse_table[i].character == c) {
@@ -53,6 +72,12 @@ const char* char_to_morse(char c) {
     return "*";
 }
 
+/**
+ * @brief Sucht Zeichen für einen gegebenen Morsecode.
+ *
+ * @param code Null-terminierte Morsecode-Zeichenkette.
+ * @return Entsprechendes Zeichen oder '*' wenn nicht gefunden.
+ */
 char morse_to_char(const char *code) {
     for (size_t i = 0; i < TABLE_SIZE; ++i) {
         if (strcmp(morse_table[i].morse, code) == 0) {
@@ -62,6 +87,14 @@ char morse_to_char(const char *code) {
     return '*';
 }
 
+/**
+ * @brief Kodiert einen Klartext in Morsecode.
+ *
+ * @param input Eingabetext
+ * @param output FILE-Zielstream
+ * @param use_slash_wordspacer true = Wörter mit „/“ trennen
+ * @return 0 bei Erfolg
+ */
 int encode(const char *input, FILE *output, int use_slash_wordspacer) {
     int space_count = 0;
     for (size_t i = 0; input[i] != '\0'; ++i) {
@@ -75,7 +108,7 @@ int encode(const char *input, FILE *output, int use_slash_wordspacer) {
         if (space_count > 0) {
             if (use_slash_wordspacer) {
                 fprintf(output, " / ");
-            } else if (space_count >= 1) {
+            } else {
                 fprintf(output, "   ");
             }
             space_count = 0;
@@ -89,6 +122,13 @@ int encode(const char *input, FILE *output, int use_slash_wordspacer) {
     return 0;
 }
 
+/**
+ * @brief Dekodiert Morsecode zurück in Text.
+ *
+ * @param input Morsecode-Zeichenkette
+ * @param output Zielstream
+ * @return 0 bei Erfolg
+ */
 int decode(const char *input, FILE *output) {
     char buffer[16] = {0};
     int buf_idx = 0;
