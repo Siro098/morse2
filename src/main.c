@@ -1,4 +1,3 @@
-
 /**
  * @file main.c
  * @brief Hauptprogramm für das Morse-Code-Tool (TI24)
@@ -6,6 +5,14 @@
  * Dieses Programm analysiert Kommandozeilenargumente und leitet die Eingabe
  * an die passenden Funktionen zur Morse-Kodierung oder -Dekodierung weiter.
  * Unterstützt Datei- und Pipedaten sowie Umleitungen.
+ *
+ * Unterstützte Optionen:
+ * - `-e`, `--encode`: Text in Morsecode umwandeln
+ * - `-d`, `--decode`: Morsecode in Text umwandeln
+ * - `-o`, `--out`: Ausgabe in Datei
+ * - `--slash-wordspacer`: Fügt `/` als Worttrenner ein (nur bei Encode)
+ * - `--programmer-info`: Gibt JSON mit Metadaten aus
+ * - `-h`, `--help`: Hilfe anzeigen
  *
  * @author Simon Liebl
  * @date 2025
@@ -16,40 +23,40 @@
 #include <getopt.h>
 #include "morse.h"
 
-#define BUFFER_SIZE 8192
+#define BUFFER_SIZE 8192 /**< Puffergröße für Ein-/Ausgabe */
+
+/**
+ * @brief Definition der verfügbaren Kommandozeilenoptionen
+ */
+static struct option long_options[] = {
+    {"help", no_argument, 0, 'h'},                 /**< Hilfe anzeigen */
+    {"encode", no_argument, 0, 'e'},               /**< Kodierung in Morsecode */
+    {"decode", no_argument, 0, 'd'},               /**< Dekodierung aus Morsecode */
+    {"out", required_argument, 0, 'o'},            /**< Dateiname für Ausgabe */
+    {"programmer-info", no_argument, 0, 0},        /**< Ausgabe der Programmierer-Infos */
+    {"slash-wordspacer", no_argument, 0, 1},       /**< `/` als Worttrenner (nur Encode) */
+    {0, 0, 0, 0}                                   /**< Abschlussmarkierung */
+};
 
 /**
  * @brief Einstiegspunkt des Programms. Verarbeitet Optionen und leitet Daten weiter.
  *
- * Unterstützte Optionen:
- * - `-e`, `--encode`: Text in Morsecode umwandeln
- * - `-d`, `--decode`: Morsecode in Text umwandeln
- * - `-o`, `--out`: Ausgabe in Datei
- * - `--slash-wordspacer`: Fügt `/` als Worttrenner ein (nur bei Encode)
- * - `--programmer-info`: Gibt JSON mit Metadaten aus
- * - `-h`, `--help`: Hilfe anzeigen
+ * Diese Funktion verarbeitet alle Kommandozeilenargumente, lädt entweder eine Datei
+ * oder liest von `stdin`, ruft dann die passende Kodierungs-/Dekodierungsfunktion auf
+ * und gibt das Ergebnis auf `stdout` oder in eine Datei aus.
  *
  * @param argc Anzahl der Argumente
- * @param argv Argumente als Zeichenketten
+ * @param argv Argumentvektor
  * @return 0 bei Erfolg, 1 bei Fehler
  */
 int main(int argc, char *argv[]) {
-    int opt;
-    int encode_flag = 0;
-    int decode_flag = 0;
-    int use_slash_wordspacer = 0;
-    char *output_filename = NULL;
+    int opt;                          /**< Aktuell verarbeitete Option */
+    int encode_flag = 0;              /**< Flag für Kodierung */
+    int decode_flag = 0;              /**< Flag für Dekodierung */
+    int use_slash_wordspacer = 0;     /**< Flag für '/' als Worttrenner */
+    char *output_filename = NULL;     /**< Dateiname für Ausgabe, falls angegeben */
 
-    static struct option long_options[] = {
-        {"help", no_argument, 0, 'h'},
-        {"encode", no_argument, 0, 'e'},
-        {"decode", no_argument, 0, 'd'},
-        {"out", required_argument, 0, 'o'},
-        {"programmer-info", no_argument, 0, 0},
-        {"slash-wordspacer", no_argument, 0, 1},
-        {0, 0, 0, 0}
-    };
-
+    // Optionen verarbeiten
     while ((opt = getopt_long(argc, argv, "hedo:", long_options, NULL)) != -1) {
         switch (opt) {
             case 'h':
@@ -64,10 +71,10 @@ int main(int argc, char *argv[]) {
             case 'o':
                 output_filename = optarg;
                 break;
-            case 0:
+            case 0:  // --programmer-info
                 print_programmer_info();
                 return 0;
-            case 1:
+            case 1:  // --slash-wordspacer
                 use_slash_wordspacer = 1;
                 break;
             case '?':
@@ -77,6 +84,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Prüfen auf widersprüchliche Optionen
     if (encode_flag && decode_flag) {
         fprintf(stderr, "Fehler: --encode und --decode dürfen nicht gleichzeitig verwendet werden.\n");
         return 1;
@@ -87,10 +95,16 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    char buffer[BUFFER_SIZE];
-    size_t input_len = 0;
+    char buffer[BUFFER_SIZE]; /**< Eingabepuffer */
+    size_t input_len = 0;     /**< Tatsächlich gelesene Länge */
     buffer[0] = '\0';
 
+    /**
+     * @brief Eingabe verarbeiten
+     *
+     * Wenn ein Dateiname als Argument angegeben ist, wird die Datei gelesen.
+     * Andernfalls wird von `stdin` gelesen.
+     */
     if (optind < argc) {
         FILE *f = fopen(argv[optind], "r");
         if (!f) {
@@ -105,7 +119,7 @@ int main(int argc, char *argv[]) {
         buffer[input_len] = '\0';
     }
 
-    FILE *out = stdout;
+    FILE *out = stdout; /**< Standardausgabe als Voreinstellung */
     if (output_filename) {
         out = fopen(output_filename, "w");
         if (!out) {
@@ -114,6 +128,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    /**
+     * @brief Aufruf der jeweiligen Verarbeitungsfunktion
+     */
     int result = 0;
     if (decode_flag) {
         result = decode(buffer, out);
