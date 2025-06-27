@@ -82,7 +82,7 @@ void print_programmer_info() {
     printf("{\n");
     printf("  \"firstname\": \"Simon\",\n");
     printf("  \"surname\": \"Liebl\",\n");
-    printf("  \"branch_of_study\": \"TIT24\",\n");
+    printf("  \"branch_of_study\": \"TIT\",\n");
     printf("  \"contact\": \"lieblsimon0304@gmail.com\"\n");
     printf("}\n");
 }

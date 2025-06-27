@@ -1,12 +1,12 @@
-
 # Morse-Code-Programm
 
 Dieses Programm ermöglicht die Umwandlung von Text in Morsecode und umgekehrt.  
 Es wurde gemäß den Anforderungen des Programmentwurfs **TI24 (Version 1.0)** an der DHBW Ravensburg, Außenstelle Friedrichshafen, entwickelt.
+GIT: https://github.com/Siro098/morse2
 
 ---
 
-##  Projektstruktur
+## Projektstruktur
 
 ```
 morse/
@@ -24,49 +24,69 @@ morse/
 
 ---
 
-##  Funktionalität
+## Funktionalität
 
 Das Programm unterstützt folgende Funktionen:
 
--  Umwandlung von Text in Morsecode (`-e`, `--encode`)
--  Umwandlung von Morsecode in Text (`-d`, `--decode`)
--  Ausgabe in eine Datei (`-o`, `--out`)
--  Anzeige von Hilfe (`-h`, `--help`)
--  Anzeige von Entwicklerdaten im JSON-Format (`--programmer-info`)
--  Optionaler Slash-Worttrenner (`--slash-wordspacer`)
+- Umwandlung von Text in Morsecode (`-e`, `--encode`)
+- Umwandlung von Morsecode in Text (`-d`, `--decode`)
+- Ausgabe in eine Datei (`-o`, `--out`)
+- Anzeige von Hilfe (`-h`, `--help`)
+- Anzeige von Entwicklerdaten im JSON-Format (`--programmer-info`)
+- Optionaler Slash-Worttrenner (`--slash-wordspacer`)
 
 ---
 
-##  Unterstützte Zeichen
+## Unterstützte Zeichen
 
 Das Programm verarbeitet:
 
-- **Buchstaben** A–Z, a–z  
-- **Zahlen** 0–9  
-- **Satzzeichen** `. , : ; ?`  
-- **Mathematische Symbole** `= - +`  
-- **Formatzeichen** `_ ( ) / @`  
+- **Buchstaben** A–Z, a–z
+- **Zahlen** 0–9
+- **Satzzeichen** `. , : ; ?`
+- **Mathematische Symbole** `= - +`
+- **Formatzeichen** `_ ( ) / @`
 
 Unbekannte Zeichen werden durch `*` ersetzt.
 
 ---
 
-##  Build-Anleitung
+## Kompilieren (Tutorial)
 
-Zum Kompilieren wird `CMake` und ein C99-kompatibler Compiler benötigt (z. B. GCC oder MinGW64):
+### Linux / WSL (empfohlen für DHBW-Testumgebung)
 
-```bash
-mkdir -p build
-cd build
-cmake ..
-make
-```
+1. Öffne ein Terminal (z. B. Ubuntu WSL unter Windows)
+2. Navigiere ins Projektverzeichnis:
+   ```bash
+   cd /mnt/c/Users/DEINNAME/CLionProjects/morse
+   ```
+3. Installiere einmalig die benötigten Tools:
+   ```bash
+   sudo apt update
+   sudo apt install cmake build-essential
+   ```
+4. Kompiliere das Programm:
+   ```bash
+   mkdir -p build
+   cd build
+   cmake ..
+   make
+   ./morse --help
+   ```
 
-Die erzeugte ausführbare Datei heißt `morse`.
+### Windows (CLion)
+
+1. Öffne das Projekt in CLion
+2. Stelle sicher, dass das Toolchain-Profil „CMake + MinGW“ oder „WSL“ verwendet
+3. Klicke auf **Build Project** ▶ oder nutze das Terminal:
+   ```bash
+   cmake -B build
+   cmake --build build
+   ```
 
 ---
 
-##  Beispielverwendung
+## Beispielverwendung
 
 ```bash
 # Text zu Morse
@@ -103,7 +123,7 @@ Dieses Projekt erfüllt alle **funktionalen (ReqFuncXX)** und **nicht-funktional
 
 ---
 
-##  Autor
+## Autor
 
 ```json
 {
