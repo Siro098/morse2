@@ -58,7 +58,7 @@ Unbekannte Zeichen werden durch `*` ersetzt.
 1. Öffne ein Terminal (z. B. Ubuntu WSL unter Windows)
 2. Navigiere ins Projektverzeichnis:
    ```bash
-   cd /mnt/c/Users/DEINNAME/CLionProjects/morse
+   cd /Path/to/directory
    ```
 3. Installiere einmalig die benötigten Tools:
    ```bash
